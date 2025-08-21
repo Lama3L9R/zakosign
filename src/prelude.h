@@ -10,10 +10,12 @@
 
 #if __has_include(<unistd.h>)
 #define ZAKO_TARGET_POSIX 1
+#define __hide __attribute__((visibility("hidden")))
 #endif
 
 #if defined(_WIN64)
 #define ZAKO_TARGET_NT 1
+#define __hide
 #endif 
 
 #if defined(__APPLE__)
@@ -27,8 +29,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-#define __hide __attribute__((visibility("hidden")))
 
 #include "sys.h"
 #include "utils.h"

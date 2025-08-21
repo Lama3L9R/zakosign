@@ -1,8 +1,6 @@
 #include "file_helper.h"
 
 #include <openssl/err.h>
-#include <sys/mman.h>
-#include <sys/syscall.h>
 
 #include "ed25519_sign.h"
 
@@ -30,10 +28,6 @@ bool zako_file_sign(file_handle_t fd, EVP_PKEY* key, uint8_t* result, uint8_t* h
 }
 
 bool zako_file_write_esig(file_handle_t fd, struct zako_esignature* esignature, size_t len) {
-    if (lseek(fd, 0, SEEK_END) == -1) {
-        return false;
-    }
-
     uint64_t magic = ZAKO_ESIGNATURE_MAGIC;
 
     zako_sys_file_append_end(fd, (uint8_t*) esignature, len);

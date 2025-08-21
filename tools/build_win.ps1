@@ -1,0 +1,11 @@
+
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/param.o" "src/param.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/cli.o" "src/cli.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/sys.o" "src/sys_nt.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/syscall.o" "src/syscall.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/utils.o" "src/utils.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/hasher.o" "src/esignature/hasher.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/file_helper.o" "src/esignature/file_helper.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/esignature.o" "src/esignature/esignature.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/ed25519_sign.o" "src/esignature/ed25519_sign.c"
+clang.exe -Iboringssl/include -Isrc -m64 -O0 -c -o "obj/cert_helper.o" "src/esignature/cert_helper.c"

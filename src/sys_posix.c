@@ -88,6 +88,10 @@ file_handle_t zako_sys_file_opencopy(char* path, char* new, bool overwrite) {
 }
 
 void zako_sys_file_append_end(file_handle_t file, uint8_t* data, size_t sz) {
+    if (lseek(fd, 0, SEEK_END) == -1) {
+        return false;
+    }
+
     write(file, (void*) data, sz);
 }
 
