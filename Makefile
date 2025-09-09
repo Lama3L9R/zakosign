@@ -1,7 +1,6 @@
 # Toolchain
-CC = clang
-LD = ld.lld
-OBJCOPY = llvm-objcopy
+CC ?= clang
+LD ?= ld.lld
 
 # path macros
 BIN_PATH := bin
@@ -11,7 +10,7 @@ DBG_PATH := debug
 
 # flags
 CFLAGS := -I$(SRC_PATH) -fPIC -Wno-deprecated-declarations -Werror -c $(CFLAGS)
-LDFLAGS := -Wall $(LDFLAGS) -fuse-ld=lld
+LDFLAGS := -Wall $(LDFLAGS) -Wfuse-ld=$(LD)
 
 # compile macros
 TARGET_NAME_DYNAMIC := zakosign
@@ -23,11 +22,18 @@ else
 	CFLAGS := $(CFLAGS) -O3
 	LDFLAGS := $(LDFLAGS) -O3
 endif
+ifeq ($(shell uname -s),Darwin)
+    LDFLAGS := $(LDFLAGS) \
+		-Lboringssl/build \
+		-lcrypto \
+		-lssl
+else
+	LDFLAGS := $(LDFLAGS) \
+		-Lboringssl/build \
+		-l:libcrypto.a \
+		-l:libssl.a
+endif
 
-LDFLAGS := $(LDFLAGS) \
-	-Lboringssl/build \
-	-l:libcrypto.a \
-	-l:libssl.a
 
 CFLAGS := \
 	-Iboringssl/include \
@@ -39,7 +45,8 @@ TARGET_CLI := $(BIN_PATH)/$(TARGET_NAME_DYNAMIC)
 # src files & obj files
 SRC := utils.c \
 	syscall.c \
-	sys_posix.c \
+	sys_linux.c \
+	sys_osx.c \
 	esignature/hasher.c \
 	esignature/file_helper.c \
 	esignature/esignature.c \
