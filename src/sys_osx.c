@@ -2,6 +2,7 @@
 
 #ifdef ZAKO_TARGET_APPLE
 #include <copyfile.h>
+#include <sys/clonefile.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -39,18 +40,8 @@ file_handle_t zako_sys_file_opencopy(char* path, char* new, bool overwrite) {
         }
     }
 
-    /*
-        I know ther is copyfile function defined in "copyfile.h"
-        But if I dont use zako_syscall4, it will looks so weired to have a full set
-        of manual syscall functions.
-
-        Also using manual syscall won't affect performance, so why not?
-        It looks cool, doesn't it?
-    */    
-    long rtn = zako_syscall4(SYS_copyfile, (long) path, (long) new, 0l, (long) COPYFILE_ALL);
-
-    if (rtn != 0) {
-        ConsoleWriteFAIL("Failed to create a copy at %s (%li)", new, rtn);
+    if (clonefile(path, new, 0) != 0) {
+        ConsoleWriteFAIL("Failed to create a copy at %s (%i)", new, errno);
     }
 
     int fd_out = open(new, O_CREAT | O_RDWR, 0644);
