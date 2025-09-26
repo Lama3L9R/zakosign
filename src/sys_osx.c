@@ -53,7 +53,7 @@ file_handle_t zako_sys_file_opencopy(char* path, char* new, bool overwrite) {
         ConsoleWriteFAIL("Failed to create a copy at %s (%li)", new, rtn);
     }
 
-    int fd_out = open(new, O_CREAT | O_RDWR | O_TRUNC, 0644);
+    int fd_out = open(new, O_CREAT | O_RDWR, 0644);
     if (fd_out == -1) {
         ConsoleWriteFAIL("Failed to open %s", new);
         return -1;
