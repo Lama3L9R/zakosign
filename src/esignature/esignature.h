@@ -49,6 +49,7 @@ struct zako_custom_field {
     uint8_t id;
     size_t sz;
 
+    uint8_t signature[ZAKO_SIGNATURE_LENGTH];
     uint8_t data[];
 };
 
