@@ -69,6 +69,24 @@ struct zako_trustchain* zako_trustchain_new() {
     return chain;
 }
 
+bool zako_trustchain_add_ca(struct zako_trustchain* chain, X509* certificate) {
+    X509_STORE_add_cert(chain->trusted_ca, certificate);
+
+    return true;
+}
+
+bool zako_trustchain_add_ca_str(struct zako_trustchain* chain, char* certificate) {
+    X509_STORE_add_cert(chain->trusted_ca, zako_x509_parse_pem(certificate));
+
+    return true;
+}
+
+bool zako_trustchain_add_ca_der(struct zako_trustchain* chain, uint8_t* data, size_t len) {
+    X509_STORE_add_cert(chain->trusted_ca, zako_x509_parse_der(data, len));
+
+    return true;
+}
+
 bool zako_trustchain_add_intermediate_str(struct zako_trustchain* chain, char* certificate) {
     sk_X509_push(chain->cert_chain, zako_x509_parse_pem(certificate));
 
