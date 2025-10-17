@@ -2,18 +2,35 @@
 
 INTERMEDIATE_DIR="generated-intermediates"
 
+function file_sz() {
+    if [ "$(uname -s)" == "Darwin" ]; then
+        echo $(stat -f %z $1)
+    else
+        echo $(stat -c %s $1)
+    fi
+}
+
+function os_sym_prefix() {
+    if [ "$(uname -s)" == "Darwin" ]; then
+        echo '_'
+    else
+        echo ''
+    fi
+}
+
 function gen_asm() {
     local BIN_F=$1
-    local SZ=$(stat -c %s $BIN_F)
+    local SZ=$(file_sz $BIN_F)
     local NAME=$(basename $BIN_F | cut -f 1 -d '.')
+    local PREFIX="$(os_sym_prefix)"
 
-    echo ".global const_${NAME}"
-    echo ".global const_${NAME}_end"
-    echo ".global const_${NAME}_sz"
-    echo "const_${NAME}:"
+    echo ".global ${PREFIX}const_${NAME}"
+    echo ".global ${PREFIX}const_${NAME}_end"
+    echo ".global ${PREFIX}const_${NAME}_sz"
+    echo "${PREFIX}const_${NAME}:"
     echo ".incbin \"$BIN_F\""
-    echo "const_${NAME}_end:"
-    echo "const_${NAME}_sz:"
+    echo "${PREFIX}const_${NAME}_end:"
+    echo "${PREFIX}const_${NAME}_sz:"
     echo ".int $SZ"
 }
 

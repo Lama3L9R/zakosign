@@ -9,7 +9,7 @@
 #define ZAKO_LIBRARY_VERSION_TYPE "staging"
 
 #if __has_include(<unistd.h>)
-#define ZAKO_TARGET_POSIX 1
+#define ZAKO_TARGET_LINUX 1
 #endif
 
 #if defined(_WIN64)
@@ -18,7 +18,7 @@
 
 #if defined(__APPLE__)
 #define ZAKO_TARGET_APPLE 1
-#define ZAKO_TARGET_POSIX 1
+#undef ZAKO_TARGET_LINUX
 #endif
 
 #include <stdint.h>

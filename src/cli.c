@@ -306,7 +306,7 @@ ZakoCommandHandler(root_info) {
         return 0;
     }
 
-    ConsoleWriteOK("E-Signature V%lu (%u Certificates, %u Extra fields)", esig->version, esig->cert_sz, esig->extra_fields_sz);
+    ConsoleWriteOK("E-Signature V%llu (%u Certificates, %u Extra fields)", esig->version, esig->cert_sz, esig->extra_fields_sz);
     ConsoleWriteOK("  Checksum: %s", base64_encode(esig->hash, ZAKO_HASH_LENGTH, NULL));
     ConsoleWriteOK("  Signed by: %s", base64_encode(esig->key.public_key, ZAKO_PUBKEY_LENGTH, NULL));
 
