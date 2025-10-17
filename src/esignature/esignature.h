@@ -140,10 +140,33 @@ struct zako_esign_context {
     uint8_t extra_fields_count;
 
     /**
+     * Signing key
+     */
+    EVP_PKEY* key;
+
+    /**
      * Internal buffer
      */
     struct zako_esignature esig_buf;
 };
+
+struct zako_esign_verify_context {
+    /**
+     * CAs to be trusted
+     */
+    STACK_OF(X509*) ca;
+
+    /**
+     * ESignature Data
+     */
+    struct zako_esignature* esig;
+
+    /**
+     * Verification flags
+     */
+    uint32_t verify_flags;
+};
+
 
 struct zako_esign_context* zako_esign_new();
 
@@ -168,6 +191,11 @@ void zako_esign_add_keycert(struct zako_esign_context* ctx, uint8_t id);
 void zako_esign_set_publickey(struct zako_esign_context* ctx, EVP_PKEY* key);
 
 /**
+ * Set private key
+ */
+void zako_esign_set_privkey(struct zako_esign_context* ctx, EVP_PKEY* key);
+
+/**
  * Set signature
  */
 void zako_esign_set_signature(struct zako_esign_context* ctx, uint8_t* hash, uint8_t* signature);
@@ -177,7 +205,40 @@ void zako_esign_set_signature(struct zako_esign_context* ctx, uint8_t* hash, uin
  */
 struct zako_esignature* zako_esign_create(struct zako_esign_context* ctx, size_t* len);
 
+/**
+ * Perform verification with default configurations
+ */
 uint32_t zako_esign_verify(struct zako_esignature* esig, uint8_t* buff, size_t len, uint32_t flags);
+
+/**
+ * Prepare verification process with fully controlled settings;
+ */
+struct zako_esign_verify_context* zako_esign_verify_prepare();
+
+/**
+ * Set verification flags
+ */
+void zako_esign_verify_setflags(struct zako_esign_verify_context* ctx, uint32_t flags);
+
+/**
+ * Set the ESignature
+ */
+void zako_esign_verify_setsig(struct zako_esign_verify_context* ctx, struct zako_esignature* esig);
+
+/**
+ * Add a trusted CA Certificate
+ */
+void zako_esign_verify_addca(struct zako_esign_verify_context* ctx, X509* ca);
+
+/**
+ * Perform verification with given configurations
+ */
+uint32_t zako_esign_verify_perform(struct zako_esign_verify_context* ctx, uint8_t* bytes, size_t sz);
+
+/**
+ * Cleanup function. Call this function to safely free the context.
+ */
+void zako_esign_verify_done(struct zako_esign_verify_context* ctx);
 
 /**
  * Get error message based on verification error code bit field index
