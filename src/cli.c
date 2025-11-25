@@ -184,7 +184,7 @@ ZakoCommandHandler(root_sign) {
         target = zako_sys_file_opencopy(input, output, overwrite);
     }
 
-    if ((signed long long) target == ZAKO_FHAND_ERROR) {
+    if (target == -1) {
         exit(1);
     }
     
@@ -306,7 +306,7 @@ ZakoCommandHandler(root_info) {
         return 0;
     }
 
-    ConsoleWriteOK("E-Signature V%lu (%u Certificates, %u Extra fields)", esig->version, esig->cert_sz, esig->extra_fields_sz);
+    ConsoleWriteOK("E-Signature V%llu (%u Certificates, %u Extra fields)", esig->version, esig->cert_sz, esig->extra_fields_sz);
     ConsoleWriteOK("  Checksum: %s", base64_encode(esig->hash, ZAKO_HASH_LENGTH, NULL));
     ConsoleWriteOK("  Signed by: %s", base64_encode(esig->key.public_key, ZAKO_PUBKEY_LENGTH, NULL));
 
@@ -457,61 +457,6 @@ ZakoCommandHandler(root_cert) {
 
     return 0;
 }
-
-#ifndef getline
-#define ssize_t size_t
-size_t getline(char **lineptr, size_t *n, FILE *stream) {
-    char *bufptr = NULL;
-    char *p = bufptr;
-    size_t size;
-    int c;
-
-    if (lineptr == NULL) {
-        return -1;
-    }
-    if (stream == NULL) {
-        return -1;
-    }
-    if (n == NULL) {
-        return -1;
-    }
-    bufptr = *lineptr;
-    size = *n;
-
-    c = fgetc(stream);
-    if (c == EOF) {
-        return -1;
-    }
-    if (bufptr == NULL) {
-        bufptr = malloc(128);
-        if (bufptr == NULL) {
-            return -1;
-        }
-        size = 128;
-    }
-    p = bufptr;
-    while(c != EOF) {
-        if ((p - bufptr) > (size - 1)) {
-            size = size + 128;
-            bufptr = realloc(bufptr, size);
-            if (bufptr == NULL) {
-                return -1;
-            }
-        }
-        *p++ = c;
-        if (c == '\n') {
-            break;
-        }
-        c = fgetc(stream);
-    }
-
-    *p++ = '\0';
-    *lineptr = bufptr;
-    *n = size;
-
-    return p - bufptr - 1;
-}
-#endif
 
 static char* zako_cli_prompt(const char* prompt) {
     printf("%s", prompt);

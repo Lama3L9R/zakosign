@@ -18,6 +18,9 @@ X509* zako_x509_load_pem(char* path);
 X509* zako_x509_parse_der(uint8_t* data, size_t len);
 
 struct zako_trustchain* zako_trustchain_new();
+bool zako_trustchain_add_ca(struct zako_trustchain* chain, X509* certificate);
+bool zako_trustchain_add_ca_str(struct zako_trustchain* chain, char* certificate);
+bool zako_trustchain_add_ca_der(struct zako_trustchain* chain, uint8_t* data, size_t len);
 bool zako_trustchain_add_intermediate_str(struct zako_trustchain* chain, char* certificate);
 bool zako_trustchain_add_intermediate_der(struct zako_trustchain* chain, uint8_t* data, size_t len);
 bool zako_trustchain_add_intermediate(struct zako_trustchain* chain, X509* certificate);
