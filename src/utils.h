@@ -3,8 +3,6 @@
 
 #include "prelude.h"
 
-#define __hide __attribute__((visibility("hidden")))
-
 #define ConsoleWrite(...) printf(__VA_ARGS__); printf("\n");
 #define ConsoleWriteOK(...) printf("[+] "); printf(__VA_ARGS__); printf("\n");
 #define ConsoleWriteFAIL(...) printf("[-] "); printf(__VA_ARGS__); printf("\n");

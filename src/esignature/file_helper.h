@@ -6,10 +6,6 @@
 #include "esignature.h"
 
 #include <openssl/evp.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 #define ZAKO_FV_MMAP_FAILED    (1 << 16)
 #define ZAKO_FV_INVALID_HEADER (1 << 17)

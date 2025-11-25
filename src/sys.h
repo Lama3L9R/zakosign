@@ -4,13 +4,13 @@
 #include "prelude.h"
 
 #ifdef ZAKO_TARGET_NT
-#include <winbase.h>
-
-typedef HANDLE file_handle_t;
+typedef void* file_handle_t;
+#define ZAKO_FHAND_ERROR 0
 #endif
 
 #ifdef ZAKO_TARGET_POSIX
 typedef int file_handle_t;
+#define ZAKO_FHAND_ERROR -1
 #endif
 
 #ifdef ZAKO_TARGET_APPLE
