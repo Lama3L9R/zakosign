@@ -1,8 +1,6 @@
 #include "file_helper.h"
 
 #include <openssl/err.h>
-#include <sys/mman.h>
-#include <sys/syscall.h>
 
 #include "ed25519_sign.h"
 
