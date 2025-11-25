@@ -9,7 +9,7 @@
 typedef HANDLE file_handle_t;
 #endif
 
-#ifdef ZAKO_TARGET_POSIX
+#ifdef ZAKO_TARGET_LINUX
 typedef int file_handle_t;
 #endif
 
