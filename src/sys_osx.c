@@ -92,7 +92,11 @@ ssize_t zako_sys_getline(char** lineptr, size_t* n, FILE* stream) {
 }
 
 bool zako_sys_gmtime_s(const time_t* timer, struct tm* buf) {
+#ifdef __STDC_LIB_EXT1__
     return gmtime_s(timer, buf) != NULL;
+#else
+    return gmtime_r(timer, buf) != NULL;
+#endif
 }
 
 bool zako_sys_is_file_valid(file_handle_t file) {

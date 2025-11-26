@@ -2,7 +2,6 @@
 #define ZAKOSIGN_HEADER_SYS_H
 
 #include "prelude.h"
-#include <time.h>
 
 #ifdef ZAKO_TARGET_NT
 #include <BaseTsd.h>
@@ -13,12 +12,24 @@ typedef SSIZE_T ssize_t;
 #endif
 
 #ifdef ZAKO_TARGET_POSIX
+
+#ifdef __STDC_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__
+#endif
+
 typedef int file_handle_t;
 #endif
 
 #ifdef ZAKO_TARGET_APPLE
+
+#ifdef __STDC_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__
+#endif
+
 typedef int file_handle_t;
 #endif
+
+#include <time.h>
 
 /**
  * Check if given path exist and can be accessed
