@@ -21,7 +21,19 @@
 #undef ZAKO_TARGET_LINUX
 #endif
 
+#define uint64_t HACK_USE_ONLY
 #include <stdint.h>
+#undef uint64_t
+
+/**
+ * The reason why we hacked uint64_t is because
+ * the definition of uint64_t is not consistant across different os.
+ * On macOS x64, uint64_t = ull
+ * On Linux x64, uint64_t = uli
+ * Although they have the same size (64b), but we have to use different formats in printf (%llu vs %lu).
+ */
+typedef unsigned long long uint64_t;
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
