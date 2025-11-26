@@ -184,7 +184,7 @@ ZakoCommandHandler(root_sign) {
         target = zako_sys_file_opencopy(input, output, overwrite);
     }
 
-    if (target == -1) {
+    if (!zako_sys_is_file_valid(target)) {
         exit(1);
     }
     
@@ -200,14 +200,14 @@ ZakoCommandHandler(root_sign) {
     }
     size_t target_sz = zako_sys_file_sz(target);
 
-    ConsoleWriteOK("File Signature created: %s (%lu bytes digested)", base64_encode(result, ZAKO_SIGNATURE_LENGTH, NULL), target_sz);
+    ConsoleWriteOK("File Signature created: %s (%zu bytes digested)", base64_encode(result, ZAKO_SIGNATURE_LENGTH, NULL), target_sz);
     
     zako_esign_set_signature(es_ctx, hash, result);
     
     size_t len = 0;
     struct zako_esignature* esig = zako_esign_create(es_ctx, &len);
 
-    ConsoleWriteOK("Writing E-Signature info (%lu bytes)...", len);
+    ConsoleWriteOK("Writing E-Signature info (%zu bytes)...", len);
     if (!zako_file_write_esig(target, esig, len)) {
         exit(1);
     }
@@ -349,10 +349,11 @@ ZakoCommandHandler(root_info) {
 
 no_cert:;
     
-    struct tm* timeinfo = gmtime((const time_t*) &esig->created_at);
+    struct tm timeinfo;
     char time_buffer[32];
-    if (timeinfo) {
-        strftime(time_buffer, 32, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
+
+    if (zako_sys_gmtime_s((const time_t*) &esig->created_at, &timeinfo)) {
+        strftime(time_buffer, 32, "%Y-%m-%dT%H:%M:%SZ", &timeinfo);
         ConsoleWriteOK("  Signed At: %s", time_buffer);
     } else {
         ConsoleWriteOK("  Signed At: <Unknown>");
@@ -464,7 +465,7 @@ static char* zako_cli_prompt(const char* prompt) {
     char* line = NULL;
     size_t n = 0;
 
-    ssize_t len = getline(&line, &n, stdin);
+    ssize_t len = zako_sys_getline(&line, &n, stdin);
     if (len < 0) {
         free(line);
         return NULL;

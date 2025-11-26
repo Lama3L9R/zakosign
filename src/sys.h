@@ -4,18 +4,32 @@
 #include "prelude.h"
 
 #ifdef ZAKO_TARGET_NT
-#include <winbase.h>
+#include <BaseTsd.h>
 
-typedef HANDLE file_handle_t;
+typedef void* file_handle_t;
+typedef SSIZE_T ssize_t;
+#define ZAKO_FHAND_ERROR 0
 #endif
 
 #ifdef ZAKO_TARGET_POSIX
+
+#ifdef __STDC_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__
+#endif
+
 typedef int file_handle_t;
 #endif
 
 #ifdef ZAKO_TARGET_APPLE
+
+#ifdef __STDC_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__
+#endif
+
 typedef int file_handle_t;
 #endif
+
+#include <time.h>
 
 /**
  * Check if given path exist and can be accessed
@@ -67,5 +81,19 @@ void* zako_sys_file_map_rw(file_handle_t file, size_t sz);
  */
 void zako_sys_file_unmap(void* ptr, size_t sz);  
 
+/**
+ * Read one line (until \n) from FILE*
+ */
+ssize_t zako_sys_getline(char** lineptr, size_t* n, FILE* stream);
+
+/**
+ * Safe version of gmtime
+ */
+bool zako_sys_gmtime_s(const time_t* timer, struct tm* buf);
+
+/**
+ * Checks if the given file handle is valid or not
+ */
+bool zako_sys_is_file_valid(file_handle_t file);
 
 #endif

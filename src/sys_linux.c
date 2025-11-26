@@ -88,6 +88,10 @@ file_handle_t zako_sys_file_opencopy(char* path, char* new, bool overwrite) {
 }
 
 void zako_sys_file_append_end(file_handle_t file, uint8_t* data, size_t sz) {
+    if (lseek(file, 0, SEEK_END) == -1) {
+        return;
+    }
+
     write(file, (void*) data, sz);
 }
 
@@ -119,6 +123,22 @@ void* zako_sys_file_map_rw(file_handle_t file, size_t sz) {
 
 void zako_sys_file_unmap(void* ptr, size_t sz) {
     munmap(ptr, sz);
+}
+
+ssize_t zako_sys_getline(char** lineptr, size_t* n, FILE* stream) {
+    return getline(lineptr, n, stream);
+}
+
+bool zako_sys_gmtime_s(const time_t* timer, struct tm* buf) {
+#ifdef __STDC_LIB_EXT1__
+    return gmtime_s(timer, buf) != NULL;
+#else
+    return gmtime_r(timer, buf) != NULL;
+#endif
+}
+
+bool zako_sys_is_file_valid(file_handle_t file) {
+    return file != -1;
 }
 
 #endif
